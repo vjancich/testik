@@ -28,10 +28,6 @@ on:
         description: 'Template Name you are deploying'
         required: false
         type: string
-      s3path:
-        description: 'Defines a path on S3 bucket of CFN Template'
-        required: true
-        type: string
       approve-deploy:
         description: 'Dry Run, when true only creates CFN ChangeSet'
         required: true
