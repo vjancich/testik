@@ -43,6 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: amazon/aws-cli:2.2.37
+    steps:
       - name: cfn-deploy
         run: |
 
