@@ -75,6 +75,12 @@ jobs:
           else
             APPROVE_DEPLOY="--approve-deploy"
           fi
-          PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$PARAMETER_ENV_PREFIX-${{ inputs.project }}"
+          
+          if [ "$STACK_NAME" = "" ]; then
+            PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$PARAMETER_ENV_PREFIX-${{ inputs.project }}"
+          else
+            PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$STACK_NAME"
+          fi
+          
           echo $PARAMETER_PATH
           echo "Toto bol starý deploy"
