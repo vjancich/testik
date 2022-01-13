@@ -50,7 +50,7 @@ jobs:
             ENVIRONMENT="test"
             PARAMETER_ENV_PREFIX="tst"
           fi
-          echo $PARAMETER_ENV_PREFIX
+          echo "parameter prefix: $PARAMETER_ENV_PREFIX"
           if [ "${{ inputs.env }}" = "prd" ]; then
             ENVIRONMENT="prod"
             PARAMETER_ENV_PREFIX="prd"
@@ -61,7 +61,7 @@ jobs:
           if [ "$STACK_NAME" = "" ]; then
             STACK_NAME="$ENVIRONMENT-${{ inputs.project }}"
           fi
-          echo $STACK_NAME
+          echo "stack name is $STACK_NAME"
           TEMPLATE_NAME="${{ inputs.template-name}}"
 
           if [ "$TEMPLATE_NAME" = "" ]; then
@@ -77,3 +77,4 @@ jobs:
           fi
           PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$STACK_NAME"
           echo $PARAMETER_PATH
+          echo "Toto bol starý deploy"

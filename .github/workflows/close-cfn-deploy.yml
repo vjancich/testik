@@ -68,4 +68,4 @@ jobs:
           fi
           PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$STACK_NAME"
           echo $PARAMETER_PATH
-
+          echo "Toto bol nový deploy"
