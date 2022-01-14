@@ -45,15 +45,11 @@ jobs:
 
           ENVIRONMENT="${{ inputs.env }}"
           echo $ENVIRONMENT
-          PARAMETER_ENV_PREFIX="${{ inputs.env }}"
           if [ "${{ inputs.env }}" = "tst" ]; then
             ENVIRONMENT="test"
-            PARAMETER_ENV_PREFIX="tst"
           fi
-          echo "parameter prefix: $PARAMETER_ENV_PREFIX"
           if [ "${{ inputs.env }}" = "prd" ]; then
             ENVIRONMENT="prod"
-            PARAMETER_ENV_PREFIX="prd"
           fi
           echo $ENVIRONMENT
           STACK_NAME="${{ inputs.stack-name}}"
@@ -76,11 +72,7 @@ jobs:
             APPROVE_DEPLOY="--approve-deploy"
           fi
           
-          if [ "$STACK_NAME" = "" ]; then
-            PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$PARAMETER_ENV_PREFIX-${{ inputs.project }}"
-          else
-            PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$STACK_NAME"
-          fi
+          PARAMETER_PATH="params/${{ inputs.customer }}/$ENVIRONMENT/$STACK_NAME"
           
           echo $PARAMETER_PATH
           echo "Toto bol starý deploy"
