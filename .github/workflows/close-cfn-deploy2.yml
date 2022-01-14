@@ -1,0 +1,91 @@
+# This is a Ohpen Close CFN Deploy remote workflow
+
+name: close-cfn-deploy
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
+      cfn-version:
+        description: 'Version of Cloudformation'
+        required: true
+        type: string
+      env:
+        description: 'Environment type [dev, tst, acc, prd]'
+        required: true
+        type: string
+      customer:
+        description: 'Customer identification'
+        required: true
+        type: string
+      stack-name:
+        description: 'Stack Name you are deploying'
+        required: false
+        type: string
+      template-name:
+        description: 'Template Name you are deploying'
+        required: false
+        type: string
+      approve-deploy:
+        description: 'Dry Run, when true only creates CFN ChangeSet'
+        required: true
+        type: string
+      new-env-deploy:
+        description: 'Check if you want to build/deploy tst/prd env'
+        required: true
+        type: string
+jobs:
+
+  cfn-deploy:
+    environment: ${{ inputs.env }}"
+    runs-on: ubuntu-latest
+    container:
+      image: amazon/aws-cli:2.2.37
+    steps:
+      - name: cfn-deploy
+        run: |
+
+          ENVIRONMENT="${{ inputs.env }}"
+          echo $ENVIRONMENT
+          NEW_ENV_DEPLOY="${{ inputs.new-env-deploy }}"
+
+          if [ "${{ inputs.env }}" = "tst" && "$NEW_ENV_DEPLOY" = "false" ]; then
+            ENVIRONMENT="test"
+          fi
+          if [ "${{ inputs.env }}" = "prd" && "$NEW_ENV_DEPLOY" = "false" ]; then
+            ENVIRONMENT="prod"
+          fi
+
+          STACK_NAME="${{ inputs.stack-name}}"
+          echo $STACK_NAME
+
+          if [ "$STACK_NAME" = "" && "$NEW_ENV_DEPLOY" = "false" ]; then
+            STACK_NAME="$ENVIRONMENT-${{ inputs.project }}"
+          elif [ "$STACK_NAME" = "" && "$NEW_ENV_DEPLOY" = "true" ]; then
+            STACK_NAME="${{ inputs.env }}-${{ inputs.project }}"
+          fi
+          echo $STACK_NAME
+          
+          TEMPLATE_NAME="${{ inputs.template-name}}"
+
+          if [ "$TEMPLATE_NAME" = "" ]; then
+            TEMPLATE_NAME="${{ inputs.project }}-main"
+          fi
+
+          APPROVE_DEPLOY="${{ inputs.approve-deploy }}"
+
+          if [ "$APPROVE_DEPLOY" = "false" ]; then
+            APPROVE_DEPLOY=""
+          else
+            APPROVE_DEPLOY="--approve-deploy"
+          fi
+          
+          PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$STACK_NAME"
+          echo $PARAMETER_PATH
+          
+          if [ "$NEW_ENV_DEPLOY" = "false" ]; then
+            echo "Toto bol starý deploy"
+          elif [ "$NEW_ENV_DEPLOY" = "true" ]; then
+            echo "Toto bol novy deploy"
