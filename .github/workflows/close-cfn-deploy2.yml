@@ -88,6 +88,6 @@ jobs:
           
           if [ "$NEW_ENV_DEPLOY" = "false" ]; then
             echo "Toto bol starý deploy"
-          elif [ "$NEW_ENV_DEPLOY" = "true" ]; then
+          else
             echo "Toto bol novy deploy"
           fi
