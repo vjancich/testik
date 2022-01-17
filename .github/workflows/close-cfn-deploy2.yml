@@ -39,7 +39,7 @@ on:
       new-env-deploy:
         description: 'Check if you want to build/deploy tst/prd env'
         required: true
-        type: strin
+        type: string
     secrets:
       github_repository_token:
         required: true
