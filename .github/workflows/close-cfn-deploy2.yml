@@ -39,17 +39,25 @@ on:
       new-env-deploy:
         description: 'Check if you want to build/deploy tst/prd env'
         required: true
-        type: string
+        type: strin
+    secrets:
+      github_repository_token:
+        required: true
+      github_packages_token:
+        required: true
 jobs:
 
   cfn-deploy:
     environment: ${{ inputs.env }}"
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ohpen/devopscli:main
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_packages_token }}
     steps:
       - name: cfn-deploy
-        run: |
-          git clone git@bitbucket.org:davinci-ondemand/cloudcommons.git
-          
+        run: |          
           ENVIRONMENT="${{ inputs.env }}"
           echo $ENVIRONMENT
           NEW_ENV_DEPLOY="${{ inputs.new-env-deploy }}"
