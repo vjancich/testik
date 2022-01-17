@@ -53,10 +53,10 @@ jobs:
           echo $ENVIRONMENT
           NEW_ENV_DEPLOY="${{ inputs.new-env-deploy }}"
 
-          if [[ "${{ inputs.env }}" = "tst" ] && [ "$NEW_ENV_DEPLOY" = "false" ]]; then
+          if [ "${{ inputs.env }}" = "tst"  &&  "$NEW_ENV_DEPLOY" = "false" ]; then
             ENVIRONMENT="test"
           fi
-          if [[ "${{ inputs.env }}" = "prd" ] && [ "$NEW_ENV_DEPLOY" = "false" ]]; then
+          if [ "${{ inputs.env }}" = "prd"  &&  "$NEW_ENV_DEPLOY" = "false" ]; then
             ENVIRONMENT="prod"
           fi
           echo $ENVIRONMENT
@@ -64,9 +64,9 @@ jobs:
           STACK_NAME="${{ inputs.stack-name}}"
           echo $STACK_NAME
 
-          if [[ "$STACK_NAME" = "" ] && [ "$NEW_ENV_DEPLOY" = "false" ]]; then
+          if [ "$STACK_NAME" = ""  &&  "$NEW_ENV_DEPLOY" = "false" ]; then
             STACK_NAME="$ENVIRONMENT-${{ inputs.project }}"
-          elif [[ "$STACK_NAME" = "" ] && [ "$NEW_ENV_DEPLOY" = "true" ]]; then
+          elif [ "$STACK_NAME" = ""  &&  "$NEW_ENV_DEPLOY" = "true" ]; then
             STACK_NAME="${{ inputs.env }}-${{ inputs.project }}"
           fi
           echo $STACK_NAME
