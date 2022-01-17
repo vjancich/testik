@@ -40,21 +40,12 @@ on:
         description: 'Check if you want to build/deploy tst/prd env'
         required: true
         type: string
-    secrets:
-      github_repository_token:
-        required: true
-      github_packages_token:
-        required: true
+
 jobs:
 
   cfn-deploy:
     environment: ${{ inputs.env }}"
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ohpen/devopscli:main
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.github_packages_token }}
     steps:
       - name: cfn-deploy
         run: |          
