@@ -85,18 +85,7 @@ jobs:
           
           PARAMETER_PATH="params/${{ inputs.customer }}/$ENVIRONMENT/$STACK_NAME"
           echo $PARAMETER_PATH
-          
-          
-          devopscli cloudformation deploy \
-            --project "${{ inputs.project}}" \
-            --version "${{ inputs.cfn-version }}" \
-            --environment "$ENVIRONMENT" \
-            --stack-name "$STACK_NAME" \
-            --template-name "$TEMPLATE_NAME" \
-            --parameter-file "parameters" \
-            --parameter-path "params/${{ inputs.customer }}/$ENVIRONMENT/$STACK_NAME" \
-            --debug $(echo $APPROVE_DEPLOY)
-                    
+                              
           if [ "$NEW_ENV_DEPLOY" = "false" ]; then
             echo "Toto bol starý deploy"
           else
