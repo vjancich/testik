@@ -31,7 +31,7 @@ on:
       approve-deploy:
         description: 'Dry Run, when true only creates CFN ChangeSet'
         required: true
-        type: boolean
+        type: string
       new-env-deploy:
         description: 'Check if you want to build/deploy tst/prd env'
         required: true
