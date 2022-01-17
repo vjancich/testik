@@ -89,11 +89,14 @@ jobs:
           devopscli cloudformation deploy \
             --project "${{ inputs.project}}" \
             --version "${{ inputs.cfn-version }}" \
+            --s3path "${{ inputs.s3path}}" \
+            --account "vjanccih" \
             --environment "$ENVIRONMENT" \
             --stack-name "$STACK_NAME" \
             --template-name "$TEMPLATE_NAME" \
             --parameter-file "parameters" \
             --parameter-path "params/${{ inputs.customer }}/$ENVIRONMENT/$STACK_NAME" \
+            --region "eu-west-1" \
             --debug $(echo $APPROVE_DEPLOY)
 
           if [ "$NEW_ENV_DEPLOY" = "false" ]; then
