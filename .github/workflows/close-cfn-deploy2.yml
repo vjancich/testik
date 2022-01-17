@@ -48,7 +48,8 @@ jobs:
     steps:
       - name: cfn-deploy
         run: |
-
+          git clone git@bitbucket.org:davinci-ondemand/cloudcommons.git
+          
           ENVIRONMENT="${{ inputs.env }}"
           echo $ENVIRONMENT
           NEW_ENV_DEPLOY="${{ inputs.new-env-deploy }}"
