@@ -83,7 +83,7 @@ jobs:
             APPROVE_DEPLOY="--approve-deploy"
           fi
           
-          PARAMETER_PATH="params/${{ inputs.customer }}/${{ inputs.env }}/$STACK_NAME"
+          PARAMETER_PATH="params/${{ inputs.customer }}/$ENVIRONMENT/$STACK_NAME"
           echo $PARAMETER_PATH
           
           if [ "$NEW_ENV_DEPLOY" = "false" ]; then
