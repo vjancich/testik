@@ -1,6 +1,6 @@
 # This is a Ohpen Close CFN Deploy remote workflow
 
-name: close-cfn-deploy
+name: close-cfn-deploy2
 
 on:
   workflow_call:
@@ -31,11 +31,11 @@ on:
       approve-deploy:
         description: 'Dry Run, when true only creates CFN ChangeSet'
         required: true
-        type: string
+        type: boolean
       new-env-deploy:
         description: 'Check if you want to build/deploy tst/prd env'
         required: true
-        type: string
+        type: boolean
 jobs:
 
   cfn-deploy:
