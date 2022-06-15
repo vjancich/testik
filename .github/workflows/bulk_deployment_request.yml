@@ -1,0 +1,110 @@
+name: Request to deploy application
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment'
+        type: string
+        required: true
+        default: tst
+      account_name:
+        description: "Name of AWS account for deployment"
+        type: string
+        required: true
+        default: davincicloud-davinciservices
+      software_version:
+        description: "Software version to deploy"
+        type: string
+        required: true
+      stack_name:
+        description: "Stack name of CloudFormation (if not set - project artifactId)"
+        type: string
+        required: false
+      template_name:
+        description: "CloudFormation template name (if not set - project artifactId)"
+        type: string
+        required: false
+      REPOSIOTRY_NAME:
+        description: "Deployment job repository (change if deployment request is in different repository than deployment workflow)"
+        type: string
+        required: false
+    secrets:
+      CICD_GITHUB_WORKFLOW_TOKEN:
+        required: true
+
+jobs:
+  list-customers:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: |
+          ENVIRONMENT="${{ inputs.environment }}"
+          if [ "${{ inputs.environment }}" = "tst" ]; then
+            ENVIRONMENT="test"
+          fi
+          if [ "${{ inputs.env }}" = "prd" ]; then
+            ENVIRONMENT="prod"
+          fi
+          echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
+
+  trigger_deployment_workflow:
+    name: '[${{ inputs.environment }}] Triggering deployment workflow for: ${{ inputs.template_name }}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install xmllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install libxml2-utils
+
+      - name: Prepare deployment parameters
+        id: deployment_parameters
+        run: |
+          INPUT_VERSION="${{ inputs.software_version }}"
+          INPUT_STACK_NAME="${{ inputs.stack_name }}"
+          INPUT_TEMPLATE_NAME="${{ inputs.template_name }}"
+
+          MVN_PROJECT_NAME=`xmllint --xpath '//*[local-name()="project"]/*[local-name()="artifactId"]/text()' pom.xml`
+
+          echo "Maven project name: ${MVN_PROJECT_NAME}"
+
+          echo "::set-output name=software_version::${INPUT_VERSION}"
+
+          if [ -z "$INPUT_STACK_NAME" ]; then
+            echo "::set-output name=stack_name::${MVN_PROJECT_NAME}"
+          else
+            echo "::set-output name=stack_name::${INPUT_STACK_NAME}"
+          fi
+
+          if [ -z "$INPUT_TEMPLATE_NAME" ]; then
+            echo "::set-output name=template_name::${MVN_PROJECT_NAME}"
+          else
+            echo "::set-output name=template_name::${INPUT_TEMPLATE_NAME}"
+          fi
+
+          if [ -z "${{ inputs.REPOSIOTRY_NAME }}" ]; then
+            echo "::set-output name=repository_name::${{ github.event.repository.name }}"
+          else
+            echo "::set-output name=repository_name::${{ inputs.REPOSIOTRY_NAME }}"
+          fi
+
+
+      - name: Sending deployment request
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.CICD_GITHUB_WORKFLOW_TOKEN }}
+          event-type: ${{ inputs.environment }}_deployment_request_event
+          repository: ohpen/${{ steps.deployment_parameters.outputs.repository_name }}
+          client-payload: '{
+             "environment": "${{ inputs.environment }}",
+             "account_name": "${{ inputs.account_name }}",
+             "software_version": "${{ steps.deployment_parameters.outputs.software_version }}",
+             "stack_name": "${{ steps.deployment_parameters.outputs.stack_name}}",
+             "template_name": "${{ steps.deployment_parameters.outputs.template_name}}"
+           }'
