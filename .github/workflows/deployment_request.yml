@@ -38,6 +38,5 @@ jobs:
     name: '[${{ inputs.environment }}] Triggering deployment workflow for: ${{ inputs.template_name }}'
     runs-on: ubuntu-latest
     steps:
-        run: |
-          echo ${{ inputs.environment }}
-
+      run: |
+        echo ${{ inputs.environment }}
