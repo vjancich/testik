@@ -20,6 +20,10 @@ on:
         description: "CloudFormation template name (if not set - project artifactId)"
         type: string
         required: false
+      cfg_repo:
+        description: "CloudFormation template name (if not set - project artifactId)"
+        type: string
+        required: false
       REPOSIOTRY_NAME:
         description: "Deployment job repository (change if deployment request is in different repository than deployment workflow)"
         type: string
@@ -35,6 +39,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          repository: vjancich/${{ inputs.cfg_repo }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
       - id: set-matrix
         run: |
           echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
