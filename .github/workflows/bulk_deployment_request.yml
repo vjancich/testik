@@ -31,6 +31,8 @@ on:
     secrets:
       CICD_GITHUB_WORKFLOW_TOKEN:
         required: true
+      REPO_ACCESS_TOKEN:
+        required: true
 
 jobs:
   list-customers:
@@ -40,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: vjancich/odm-eureka-cfg
+          repository: vjancich/${{ inputs.cfg_repo }}
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
       - id: set-matrix
         run: |
