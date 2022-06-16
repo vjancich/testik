@@ -40,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: vjancich/${{ inputs.cfg_repo }}
+          repository: vjancich/odm-eureka-cfg
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
       - id: set-matrix
         run: |
