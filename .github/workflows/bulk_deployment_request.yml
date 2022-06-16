@@ -68,7 +68,7 @@ jobs:
           repository: vjancich/testik
           client-payload: '{
              "environment": "${{ inputs.environment }}",
-             "account_name": "nieco",
+             "account_name": "["davincicloud-adaxio","ohp-dudley-test"]",
              "software_version": "${{ steps.deployment_parameters.outputs.software_version }}",
              "stack_name": "${{ steps.deployment_parameters.outputs.stack_name}}",
              "template_name": "${{ steps.deployment_parameters.outputs.template_name}}"
