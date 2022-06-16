@@ -28,9 +28,6 @@ on:
         description: "Deployment job repository (change if deployment request is in different repository than deployment workflow)"
         type: string
         required: false
-    secrets:
-      CICD_GITHUB_WORKFLOW_TOKEN:
-        required: true
 
 jobs:
   list-customers:
@@ -40,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: vjancich/github
+          repository: vjancich/${{ inputs.cfg_repo }}
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
       - id: set-matrix
         run: |
