@@ -35,9 +35,6 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          repository: vjancich/testik
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
       - id: set-matrix
         run: |
           echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
