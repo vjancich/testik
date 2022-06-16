@@ -28,6 +28,9 @@ on:
         description: "Deployment job repository (change if deployment request is in different repository than deployment workflow)"
         type: string
         required: false
+    secrets:
+      CICD_GITHUB_WORKFLOW_TOKEN:
+        required: true
 
 jobs:
   list-customers:

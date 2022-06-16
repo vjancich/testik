@@ -1,0 +1,28 @@
+name: zufalost
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Current release version: X.Y.Z'
+        required: true
+      deploy_to_test:
+        description: 'Check if release can be directly deployed to test (no manual changes needed prior to deployment)'
+        required: true
+        type: boolean
+
+jobs:
+  list-customers:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: vjancich/odm-eureka-cfg
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      - id: set-matrix
+        run: |
+          echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
+          ehoj=$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')
+          echo $ehoj
