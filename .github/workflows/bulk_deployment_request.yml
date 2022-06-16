@@ -37,8 +37,6 @@ on:
 jobs:
   list-customers:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -49,8 +47,11 @@ jobs:
           echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
           ehoj=$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')
           echo $ehoj
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   trigger_deployment_workflow:
+    needs: list-customers
     name: '[${{ inputs.environment }}] Triggering deployment workflow for: ${{ inputs.template_name }}'
     runs-on: ubuntu-latest
     steps:
