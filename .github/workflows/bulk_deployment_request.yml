@@ -29,20 +29,20 @@ on:
         required: true
 
 jobs:
-    list-customers:
-      runs-on: ubuntu-latest
-      outputs:
-        matrix: ${{ steps.set-matrix.outputs.matrix }}
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            repository: vjancich/testik
-            token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        - id: set-matrix
-          run: |
-            echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
-            ehoj=$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')
-            echo $ehoj
+  list-customers:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: vjancich/testik
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      - id: set-matrix
+        run: |
+          echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
+          ehoj=$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')
+          echo $ehoj
 
   trigger_deployment_workflow:
     name: '[${{ inputs.environment }}] Triggering deployment workflow for: ${{ inputs.template_name }}'
