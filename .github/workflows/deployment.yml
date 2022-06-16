@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment'
+        type: string
+        required: true
+        default: tst
+      account_name:
+        description: "Name of AWS account for deployment"
+        type: string
+        required: true
+        default: davincicloud-davinciservices
+      software_version:
+        description: "Software version to deploy"
+        type: string
+        required: true
+      stack_name:
+        description: "Stack name of CloudFormation (if not set - project artifactId)"
+        type: string
+        required: false
+      template_name:
+        description: "CloudFormation template name (if not set - project artifactId)"
+        type: string
+        required: false
+      PRODUCT_GROUP_NAME:
+        description: 'Product group name'
+        type: string
+        required: true
+    secrets:
+      DEPLOY_GITHUB_TOKEN:
+        required: true
+      COR_CICD_AUTOMATION_AWS_ACCESS_KEY_ID:
+        required: true
+      COR_CICD_AUTOMATION_AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  deploy:
+    steps:
+      - name: Deployment payload
+        run: |
+          echo "################################################################################"
+          echo "                         DEPLOYMENT REQUEST FOR                                 "
+          echo "Environment:          ${{ inputs.environment }}                                 "
+          echo "Account name:         ${{ inputs.account_name }}                                "
+          echo "Version:              ${{ inputs.software_version }}                            "
+          echo "Stack name:           ${{ inputs.stack_name }}                                  "
+          echo "Template name:        ${{ inputs.template_name }}                               "
+          echo "################################################################################"
+
+      - name: Preparing product dependent parameters
+        id: product_parameters
+        run: |
+          echo "cav"

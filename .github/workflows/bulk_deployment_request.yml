@@ -60,16 +60,16 @@ jobs:
         run: |
           echo "${{needs.list-customers.outputs.matrix}}"
 
-#      - name: Sending deployment request
-#        uses: peter-evans/repository-dispatch@v1
-#        with:
-#          token: ${{ secrets.CICD_GITHUB_WORKFLOW_TOKEN }}
-#          event-type: ${{ inputs.environment }}_deployment_request_event
-#          repository: ohpen/${{ steps.deployment_parameters.outputs.repository_name }}
-#          client-payload: '{
-#             "environment": "${{ inputs.environment }}",
-#             "account_name": "${{ inputs.account_name }}",
-#             "software_version": "${{ steps.deployment_parameters.outputs.software_version }}",
-#             "stack_name": "${{ steps.deployment_parameters.outputs.stack_name}}",
-#             "template_name": "${{ steps.deployment_parameters.outputs.template_name}}"
-#           }'
+      - name: Sending deployment request
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: ${{ inputs.environment }}_deployment_request_event
+          repository: ohpen/testik
+          client-payload: '{
+             "environment": "${{ inputs.environment }}",
+             "account_name": "${{needs.list-customers.outputs.matrix}}",
+             "software_version": "${{ steps.deployment_parameters.outputs.software_version }}",
+             "stack_name": "${{ steps.deployment_parameters.outputs.stack_name}}",
+             "template_name": "${{ steps.deployment_parameters.outputs.template_name}}"
+           }'
