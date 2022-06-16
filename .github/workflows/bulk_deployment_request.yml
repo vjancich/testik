@@ -8,11 +8,6 @@ on:
         type: string
         required: true
         default: tst
-      account_name:
-        description: "Name of AWS account for deployment"
-        type: string
-        required: true
-        default: davincicloud-davinciservices
       software_version:
         description: "Software version to deploy"
         type: string
@@ -34,6 +29,21 @@ on:
         required: true
 
 jobs:
+    list-customers:
+      runs-on: ubuntu-latest
+      outputs:
+        matrix: ${{ steps.set-matrix.outputs.matrix }}
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            repository: vjancich/testik
+            token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        - id: set-matrix
+          run: |
+            echo "::set-output name=matrix::$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')"
+            ehoj=$(ls -1 cloudformation/ | tr -d /  | jq -R -s -c 'split("\n")[:-1]')
+            echo $ehoj
+
   trigger_deployment_workflow:
     name: '[${{ inputs.environment }}] Triggering deployment workflow for: ${{ inputs.template_name }}'
     runs-on: ubuntu-latest
@@ -41,7 +51,7 @@ jobs:
       - name: Prepare deployment parameters
         id: deployment_parameters
         run: |
-          echo "${{ inputs.account_name }}"
+          echo "${{needs.list-customers.outputs.matrix}}"
 
 #      - name: Sending deployment request
 #        uses: peter-evans/repository-dispatch@v1
