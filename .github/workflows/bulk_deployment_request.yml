@@ -65,7 +65,7 @@ jobs:
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: ${{ inputs.environment }}_deployment_request_event
-          repository: ohpen/testik
+          repository: vjancich/testik
           client-payload: '{
              "environment": "${{ inputs.environment }}",
              "account_name": "nieco",
